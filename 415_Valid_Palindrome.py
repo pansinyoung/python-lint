@@ -30,10 +30,22 @@ class Solution:
     """
     def isPalindrome(self, s: str):
         s = s.lower()
-        s = ''.join(c if c.isalnum() else '' for c in s)
-        for i in range(len(s) // 2):
-            if s[i] != s[-i-1]:
+        i = 0
+        j = len(s) - 1
+        while i < len(s) and not s[i].isalnum():
+            i += 1
+        while j >= 0 and not s[j].isalnum():
+            j -= 1
+        while i < j:
+            if s[i] != s[j]:
                 return False
+            i += 1
+            j -= 1
+            while i < len(s) and not s[i].isalnum():
+                i += 1
+            while j >= 0 and not s[j].isalnum():
+                j -= 1
+
         return True
 
 
@@ -42,8 +54,13 @@ def main():
     b = ''
     c = 'race a car'
     d = '1a2'
+    e = '.;'
     s = Solution()
+    print(s.isPalindrome(a))
+    print(s.isPalindrome(b))
+    print(s.isPalindrome(c))
     print(s.isPalindrome(d))
+    print(s.isPalindrome(e))
 
 
 if __name__ == '__main__':
