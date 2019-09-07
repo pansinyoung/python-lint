@@ -28,22 +28,69 @@ source.
 Challenge
 O(n2) is acceptable. Can you implement an O(n) algorithm? (hint: KMP)
 """
+from typing import List
 
 
 class Solution:
+
+    def KMPParttern(self, target: str) -> List[int]:
+        if len(target) == 0:
+            return []
+        if len(target) == 1:
+            return [0]
+        result = [0] * len(target)
+        i = 1
+        while i < len(target):
+            if target[i] == target[result[i-1]]:
+                result[i] = result[i-1] + 1
+            i += 1
+        return result
+
     """
     @param source:
     @param target:
     @return: return the index
     """
     def strStr(self, source: str, target: str) -> int:
-        return source.find(target)
+        if source == target or target == '':
+            return 0
+        if len(source) < len(target):
+            return -1
+        lps = self.KMPParttern(target)
+        j = 0
+        # print(lps)
+        for i in range(len(source)):
+            # print(i, j)
+            if len(source) - i < len(target) - j:
+                break
+            if source[i] == target[j]:
+                if j == len(target) - 1:
+                    return i - len(target) + 1;
+                j += 1
+            else:
+                while True:
+                    if j == 0:
+                        break
+                    j = lps[j - 1]
+                    if source[i] == target[j]:
+                        j += 1
+                        break
+        return -1
 
 
 def main():
     s = Solution()
-    print('source', 'target', s.strStr('source', 'target'))
-    print('abcdabcdefg', 'bcd', s.strStr('abcdabcdefg', 'bcd'))
+    source1 = 'mississippi'
+    target1 = 'issip'
+    source2 = 'source'
+    target2 = 'se'
+    source3 = 'tartarget'
+    target3 = 'target'
+    print(source1, target1, s.strStr(source1, target1))
+    print(source2, target2, s.strStr(source2, target2))
+    print(source3, target3, s.strStr(source3, target3))
+    # print('abcdabcdefg', 'bcd', s.strStr('abcdabcdefg', 'bcd'))
+    # print(s.KMPParttern('aaaabaacd'))
 
 
 if __name__ == '__main__':
