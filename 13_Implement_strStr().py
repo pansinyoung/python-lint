@@ -52,29 +52,16 @@ class Solution:
     @return: return the index
     """
     def strStr(self, source: str, target: str) -> int:
+        if source is None or target is None or len(source) < len(target):
+            return -1
         if source == target or target == '':
             return 0
-        if len(source) < len(target):
-            return -1
-        lps = self.KMPParttern(target)
-        j = 0
-        # print(lps)
-        for i in range(len(source)):
-            # print(i, j)
-            if len(source) - i < len(target) - j:
-                break
-            if source[i] == target[j]:
-                if j == len(target) - 1:
-                    return i - len(target) + 1;
-                j += 1
-            else:
-                while True:
-                    if j == 0:
-                        break
-                    j = lps[j - 1]
-                    if source[i] == target[j]:
-                        j += 1
-                        break
+        n = len(target)
+        i = 0
+        while i + n <= len(source):
+            if source[i:i+n] == target:
+                return i
+            i += 1
         return -1
 
 
