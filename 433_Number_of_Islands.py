@@ -43,24 +43,20 @@ class Solution:
         for i in range(m):
             for j in range(n):
                 if grid[i][j] == 1:
-                    grid[i][j] = 2
-                    if (i - 1 < 0 or grid[i - 1][j] != 2) \
-                            and (j - 1 < 0 or grid[i][j - 1] != 2) \
-                            and (i + 1 >= m or grid[i + 1][j] != 2) \
-                            and (j + 1 >= n or grid[i][j + 1] != 2):
-                        if i - 1 >= 0 and grid[i - 1][j] != 0:
-                            grid[i - 1][j] = 2
-                        if j - 1 >= 0 and grid[i][j - 1] != 0:
-                            grid[i][j - 1] = 2
-                        if i + 1 < m and grid[i + 1][j] != 0:
-                            grid[i + 1][j] = 2
-                        if j + 1 < n and grid[i][j + 1] != 0:
-                            grid[i][j + 1] = 2
-                        result += 1
+                    result += 1
+                    self.remove_island(grid, i, j)
         return result
 
-
-    def removeIsland(self, grid: List[List[int]], i: int, j: int):
+    def remove_island(self, grid: List[List[int]], i: int, j: int):
+        if not 0 <= i < len(grid) or not 0 <= j < len(grid[0]) or grid[i][j] == 0:
+            return
+        else:
+            grid[i][j] = 0
+            self.remove_island(grid, i - 1, j)
+            self.remove_island(grid, i + 1, j)
+            self.remove_island(grid, i, j - 1)
+            self.remove_island(grid, i, j + 1)
+            return
 
 
 def main():
