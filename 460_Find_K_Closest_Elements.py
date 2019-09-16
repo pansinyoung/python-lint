@@ -34,6 +34,8 @@ class Solution:
     """
 
     def kClosestNumbers(self, A: List[int], target: int, k: int) -> List[int]:
+        if not A or k == 0:
+            return []
         m = len(A)
         i, j = 0, m
         closest_ind = -1
@@ -60,24 +62,33 @@ class Solution:
             result.append(A[end + 1])
             end += 1
             i -= 1
-        j = 1
+        start -= 1
+        end += 1
         while i > 0:
-            if start - j >= 0:
-                result.append(A[start - j])
-                i -= 1
-
-            if end + j < m:
-                result.append(A[end + j])
-                i -= 1
-            j += 1
+            i -= 1
+            if start < 0 and end >= m:
+                break
+            elif start < 0:
+                result.append(A[end])
+                end += 1
+            elif end >= m:
+                result.append(A[start])
+                start -= 1
+            else:
+                if abs(A[start] - target) <= abs(A[end] - target):
+                    result.append(A[start])
+                    start -= 1
+                else:
+                    result.append(A[end])
+                    end += 1
         return result
 
 
 def main():
     s = Solution()
-    A = [1, 4, 6, 8]
-    target = 3
-    k = 3
+    A = [1, 2, 3, 4, 5, 6, 7, 8, 10, 100, 150, 156, 179]
+    target = 9
+    k = 12
     print(s.kClosestNumbers(A, target, k))
 
 
