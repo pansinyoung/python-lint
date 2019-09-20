@@ -1,21 +1,25 @@
 """
-71. Binary Tree Zigzag Level Order Traversal
-Given a binary tree, return the zigzag level order traversal of its nodes' values. (ie, from left to right, then right to left for the next level and alternate between).
+Given a binary tree, return the bottom-up level order traversal of its nodes' values. (ie, from left to right, level by level from leaf to root).
 
 Example
 Example 1:
 
-Input:{1,2,3}
-Output:[[1],[3,2]]
+Input:
+{1,2,3}
+Output:
+[[2,3],[1]]
 Explanation:
     1
    / \
   2   3
 it will be serialized {1,2,3}
+level order traversal
 Example 2:
 
-Input:{3,9,20,#,#,15,7}
-Output:[[3],[20,9],[15,7]]
+Input:
+{3,9,20,#,#,15,7}
+Output:
+[[15,7],[9,20],[3]]
 Explanation:
     3
    / \
@@ -23,6 +27,7 @@ Explanation:
     /  \
    15   7
 it will be serialized {3,9,20,#,#,15,7}
+level order traversal
 """
 from typing import List
 from collections import deque
@@ -37,36 +42,31 @@ class TreeNode:
 
 class Solution:
     """
-    @param root: A Tree
-    @return: A list of lists of integer include the zigzag level order traversal of its nodes' values.
+    @param root: A tree
+    @return: buttom-up level order a list of lists of integer
     """
-    def zigzagLevelOrder(self, root: TreeNode) -> List[List[int]]:
+    def levelOrderBottom(self, root: TreeNode) -> List[List[int]]:
         if not root:
             return []
         tree_queue = deque()
         tree_queue.append(root)
         tree_queue.append('#')
-        res = []
-        zigzag = True
-        cur_queue = deque()
+        res = deque()
+        cur_list = []
         while tree_queue:
             cur = tree_queue.popleft()
             if cur == '#':
-                res.append(list(cur_queue))
-                cur_queue = deque()
-                zigzag = not zigzag
+                res.appendleft(cur_list)
+                cur_list = []
                 if tree_queue:
                     tree_queue.append('#')
             else:
-                if zigzag:
-                    cur_queue.append(cur.val)
-                else:
-                    cur_queue.appendleft(cur.val)
+                cur_list.append(cur.val)
                 if cur.left:
                     tree_queue.append(cur.left)
                 if cur.right:
                     tree_queue.append(cur.right)
-        return res
+        return list(res)
 
 
 def main():
