@@ -46,24 +46,40 @@ class LinkedNode:
 
 
 class LRUCache:
-    """
-    @param: capacity: An integer
-    """
     def __init__(self, capacity):
-        index_map = {}
+        self.dummy = LinkedNode()
+        self.tail = self.dummy
+        self.capacity = capacity
+        self.map_to_prev = {}
 
+    def kick_to_back(self, node):
+        if node == self.tail:
+            return
+        self.map_to_prev[node.key].next = node.next
+        self.map_to_prev[node.next.key] = self.map_to_prev[node.key]
+        node.next = None
+        self.tail.next = node
+        self.map_to_prev[node.key] = self.tail
+        self.tail = node
 
-    """
-    @param: key: An integer
-    @return: An integer
-    """
     def get(self, key):
-        # write your code here
+        if key not in self.map_to_prev:
+            return -1
+        self.kick_to_back(self.map_to_prev[key].next)
+        return self.map_to_prev[key].next.value
 
-    """
-    @param: key: An integer
-    @param: value: An integer
-    @return: nothing
-    """
     def set(self, key, value):
-        # write your code here
+        if key in self.map_to_prev:
+            self.map_to_prev[key].next.value = value
+            self.kick_to_back(self.map_to_prev[key].next)
+            return
+        node = LinkedNode(key, value)
+        self.map_to_prev[key] = self.tail
+        self.tail.next = node
+        self.tail = node
+        if len(self.map_to_prev) > self.capacity:
+            cur = self.dummy.next
+            self.dummy.next = cur.next
+            self.map_to_prev[self.dummy.next.key] = self.dummy
+            cur.next = None
+            del self.map_to_prev[cur.key]
