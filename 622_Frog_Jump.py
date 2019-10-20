@@ -38,7 +38,7 @@ The first stone's position is always 0.
 
 class Solution:
     def canCross(self, stones):
-        dp = []
+        dp = {}
         for s in stones:
             dp[s] = set()
         dp[0].add(0)
@@ -47,3 +47,9 @@ class Solution:
                 if k - 1 > 0 and s + k - 1 in dp:
                     dp[s + k - 1].add(k - 1)
 
+                if k > 0 and s + k in dp:
+                    dp[s + k].add(k)
+
+                if s + k + 1 in dp:
+                    dp[s + k + 1].add(k + 1)
+        return len(dp[stones[-1]]) > 0
